@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <bitset>
+#include <sstream>
 using namespace std;
 
 void printVec(const vector<bitset<8> > vec)
@@ -10,6 +11,12 @@ void printVec(const vector<bitset<8> > vec)
                 cout << vec[i] << " ";
         }
         cout << endl;
+}
+
+//circular left shift function
+bitset<32> cLShift(bitset<32> X, int n){
+        bitset<32> result = (X << n) | (X >> (32 - n));
+        return result;
 }
 
 void sha1(const string str){
@@ -58,6 +65,16 @@ void sha1(const string str){
                 cout << "W[" << i << "] = " << W[i] << endl;
         }        
         cout << endl << endl;
+
+        //testing out code
+        // int hextest = 0xFECDBA98;
+        // bitset<32> test = bitset<32>(hextest);
+        // cout << "hex to bitset = " << test << endl;
+        // cout << "After left shift = " << cLShift(test, 3) << endl;
+        // cout << "Back to hex = ";
+        // stringstream backtohex;
+        // backtohex << hex << uppercase << test.to_ulong();
+        // cout << backtohex.str() << endl;
 
         // length = binaryStr.size() * 8; //size = 1 byte or 8 bits
         // cout << "Length = " << length << endl;
