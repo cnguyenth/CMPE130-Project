@@ -20,7 +20,6 @@ bitset<32> cLShift(bitset<32> X, int n) {
 }
 
 //compression function
-//The w argument might not be necessary
 void compression(bitset<32> *result, bitset<32> *w) {
     bitset<32> a = result[0];
     bitset<32> b = result[1];
@@ -32,7 +31,7 @@ void compression(bitset<32> *result, bitset<32> *w) {
 
 #define sha1helper(function,value) \
 			{ \
-                a = cLShift(a, 5) + (function) + e + value + w[round]; \
+                a = bitset<32>( cLShift(a, 5).to_ulong() + (function).to_ulong() + e.to_ulong() + value.to_ulong() + w[round].to_ulong() ); \
 				b = a; \
 				c = cLShift(b, 30); \
 				d = c;  \
@@ -41,41 +40,40 @@ void compression(bitset<32> *result, bitset<32> *w) {
 
     while (round < 16)
     {
-        sha1helper((b & c) | (~b & d), 0x5a827999)
+        sha1helper((b & c) | (~b & d), bitset<32> (0x5a827999))
             ++round;
     }
     while (round < 20)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper((b & c) | (~b & d), 0x5a827999)
+        sha1helper((b & c) | (~b & d), bitset<32> (0x5a827999))
             ++round;
     }
     while (round < 40)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper(b ^ c ^ d, 0x6ed9eba1)
+        sha1helper(b ^ c ^ d, bitset<32> (0x6ed9eba1))
             ++round;
     }
     while (round < 60)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper((b & c) | (b & d) | (c & d), 0x8f1bbcdc)
+        sha1helper((b & c) | (b & d) | (c & d), bitset<32> (0x8f1bbcdc))
             ++round;
     }
     while (round < 80)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper(b ^ c ^ d, 0xca62c1d6)
+        sha1helper(b ^ c ^ d, bitset<32> (0xca62c1d6))
             ++round;
     }
 
 #undef sha1helper
-
-    result[0] = result[0] + a;
-    result[1] = result[1] + b;
-    result[2] = result[2] + c;
-    result[3] = result[3] + d;
-    result[4] = result[4] + e;
+    result[0] = bitset<32> (result[0].to_ulong() + a.to_ulong());
+    result[1] = bitset<32> (result[1].to_ulong() + b.to_ulong());
+    result[2] = bitset<32> (result[2].to_ulong() + c.to_ulong());
+    result[3] = bitset<32> (result[3].to_ulong() + d.to_ulong());
+    result[4] = bitset<32> (result[4].to_ulong() + e.to_ulong());
 }
 
 
@@ -115,20 +113,28 @@ void sha1(const string str) {
     cout << endl;
 
     cout << "Break the 512-bit message into 16 32-bit words" << endl;
-    vector<bitset<32> > W;
+    bitset<32> W[80];
+    int Wsize = 0;
     for (unsigned i = 0; i < 64; i = i + 4)
     {
         //combine four 8-bit numbers into one 32-bit number
-        W.push_back(binaryStr[i].to_ulong() << 24 | binaryStr[i + 1].to_ulong() << 16 | binaryStr[i + 2].to_ulong() << 8 | binaryStr[i + 3].to_ulong());
+        W[Wsize] = bitset<32> (binaryStr[i].to_ulong() << 24 | binaryStr[i + 1].to_ulong() << 16 | binaryStr[i + 2].to_ulong() << 8 | binaryStr[i + 3].to_ulong());
+        Wsize++;
     }
-    for (unsigned i = 0; i < W.size(); i++)
+    for (unsigned i = 0; i < Wsize; i++)
     {
         cout << "W[" << i << "] = " << W[i] << endl;
     }
     cout << endl << endl;
 
     //Result array
-    vector<bitset<32>> result= { 0x01234567, 0x89ABCDEF, 0xFECDBA98, 0x76543210, 0xC3D2E1F0};
+    bitset<32> result[] = { 0x01234567, 0x89ABCDEF, 0xFECDBA98, 0x76543210, 0xC3D2E1F0};
+
+    compression(result, W);
+    cout << "Result = ";
+    stringstream backtohex;
+    backtohex << hex << uppercase << result[0].to_ulong() << result[1].to_ulong() << result[2].to_ulong() << result[3].to_ulong() << result[4].to_ulong();
+    cout << backtohex.str() << endl;
 
     //Buffer
     //If w is necessary, I was unsure of what to declare it as
