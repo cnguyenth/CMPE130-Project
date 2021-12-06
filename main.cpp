@@ -1,10 +1,3 @@
-#include "sha1.h"
-
-int main() {
-    sha1 test;
-    test.set();
-    test.hash(test);
-}
 #include "SHA1.h"
 #include "md5.h"
 #include "SHA2-256.h"
