@@ -1,7 +1,7 @@
 #include "sha1.h"
 #include "md5.h"
-#include "SHA2-256.h"
-#include "SHA3-256.h"
+#include "sha2-256.h"
+#include "sha3-256.h"
 
 int main() {
 
