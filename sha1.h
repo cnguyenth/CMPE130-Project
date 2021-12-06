@@ -9,20 +9,20 @@
 
 using namespace std;
 
-class sha1{
+class SHA1{
 public:
 	//Default constructor
-	sha1();
+	SHA1();
 	//Constructor with parameter
-	sha1(string text);
-	//Change input of a sha1 variable
+	SHA1(string text);
+	//Change input of a SHA1 variable
 	void set();
 	//Circular left shift function
 	friend bitset<32> cLShift(bitset<32> X, int n);
 	//SHA1 Compression Function for void hash
 	friend void compression(bitset<32>* result, bitset<32>* w);
 	//SHA1 Hashing Algorithm
-	void hash(const sha1 text);
+	void hash(const SHA1 text);
 private:
 	string data;
 };
