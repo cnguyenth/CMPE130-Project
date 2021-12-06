@@ -1,18 +1,18 @@
-#include "sha1.h"
+#include "SHA1.h"
 
 //Default constructor
-sha1::sha1() {
+SHA1::SHA1() {
 	data = "";
 }
 
 //Constructor with parameter
-sha1::sha1(string text) {
+SHA1::SHA1(string text) {
 	data = text;
 }
 
-//Change input of a sha1 variable
-void sha1::set() {
-	cout << "Enter a string to hash: ";
+//Change input of a SHA1 variable
+void SHA1::set() {
+	cout << "(SHA1)Enter a string to hash: ";
 	cin >> data;
 }
 
@@ -32,7 +32,7 @@ void compression(bitset<32>* result, bitset<32>* w) {
 
     int round = 0;
 
-#define sha1helper(function,value) \
+#define SHA1helper(function,value) \
 			{ \
                 const bitset<32>t = bitset<32>( cLShift(a, 5).to_ullong() + (function).to_ullong() + e.to_ullong() + value.to_ullong() + w[round].to_ullong() ); \
                 e = d; \
@@ -44,35 +44,35 @@ void compression(bitset<32>* result, bitset<32>* w) {
 
     while (round < 16)
     {
-        sha1helper((b & c) | (~b & d), bitset<32>(0x5a827999))
+        SHA1helper((b & c) | (~b & d), bitset<32>(0x5a827999))
             ++round;
     }
     while (round < 20)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper((b & c) | (~b & d), bitset<32>(0x5a827999))
+        SHA1helper((b & c) | (~b & d), bitset<32>(0x5a827999))
             ++round;
     }
     while (round < 40)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper(b ^ c ^ d, bitset<32>(0x6ed9eba1))
+        SHA1helper(b ^ c ^ d, bitset<32>(0x6ed9eba1))
             ++round;
     }
     while (round < 60)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper((b & c) | (b & d) | (c & d), bitset<32>(0x8f1bbcdc))
+        SHA1helper((b & c) | (b & d) | (c & d), bitset<32>(0x8f1bbcdc))
             ++round;
     }
     while (round < 80)
     {
         w[round] = cLShift((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-        sha1helper(b ^ c ^ d, bitset<32>(0xca62c1d6))
+        SHA1helper(b ^ c ^ d, bitset<32>(0xca62c1d6))
             ++round;
     }
 
-#undef sha1helper
+#undef SHA1helper
 
     result[0] = bitset<32>(result[0].to_ullong() + a.to_ulong());
     result[1] = bitset<32>(result[1].to_ullong() + b.to_ulong());
@@ -82,8 +82,8 @@ void compression(bitset<32>* result, bitset<32>* w) {
 }
 
 //SHA1 Hashing Algorithm
-void sha1::hash(const sha1 text) {
-    cout << "Original message: " << text.data<< endl;
+void SHA1::hash(const SHA1 text) {
+    //cout << "Original message: " << text.data<< endl;
     //cout << "Original message to binary: " << endl;
     vector<bitset<8> > binaryStr;
     for (unsigned int i = 0; i < text.data.size(); i++)
@@ -138,6 +138,7 @@ void sha1::hash(const sha1 text) {
     stringstream backtohex;
     backtohex << hex << uppercase << result[0].to_ulong() << result[1].to_ulong() << result[2].to_ulong() << result[3].to_ulong() << result[4].to_ulong();
     cout << backtohex.str() << endl;
+    cout << endl;
 
     //Buffer
     //If w is necessary, I was unsure of what to declare it as
