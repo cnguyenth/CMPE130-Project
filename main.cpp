@@ -1,4 +1,4 @@
-#include "SHA1.h"
+#include "sha1.h"
 #include "md5.h"
 #include "SHA2-256.h"
 #include "SHA3-256.h"
