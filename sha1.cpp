@@ -99,7 +99,7 @@ void SHA1::hash(const SHA1 text) {
     binaryStr.push_back(bitset<8>(128)); //128 = 10000000 in binary. Adds the '1' bit then some of the following zero's to message
     int numPadBits = 448 - (8 + length);
     numPadBits = numPadBits / 8;
-    for (unsigned int i = 0; i < numPadBits; i++)
+    for (int i = 0; i < numPadBits; i++)
     {
         binaryStr.push_back(bitset<8>(0));
     }
