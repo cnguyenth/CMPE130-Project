@@ -1,4 +1,4 @@
-#include "SHA1.h"
+#include "sha1.h"
 
 //Default constructor
 SHA1::SHA1() {
